@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 
 import { MessageService } from 'primeng/api';
-import { cellState } from 'src/app/models/CellState';
+import { CellState } from 'src/app/models/CellState';
 import { GameService } from 'src/app/services/game.service';
 
 @Component({
@@ -17,11 +17,11 @@ import { GameService } from 'src/app/services/game.service';
 })
 export class GridComponent implements OnInit, AfterViewInit {
   @ViewChild('grid') grid: ElementRef;
+  
   public rows = 0;
   public cols = 0;
-
   public border$ = this.gameService.border$;
-  public cells: cellState[][];
+  public cells: CellState[][];
 
   private allowClick = false;
   private tapAudio = new Audio('assets/tap.mp3');
@@ -31,27 +31,6 @@ export class GridComponent implements OnInit, AfterViewInit {
     private messageService: MessageService
   ) {
     this.tapAudio.volume = 0.1;
-  }
-
-  onClickHandler(row: number, col: number) {
-    if (!this.allowClick) {
-      this.messageService.add({
-        severity: 'info',
-        summary: 'Info',
-        detail: 'Please click draw button to start changing cells',
-      });
-      return;
-    }
-    if (this.cells[row][col].isAlive) {
-      this.cells[row][col].hasBeenOnceAlive = false;
-    }
-    this.cells[row][col].isAlive = !this.cells[row][col].isAlive;
-    this.tapAudio.play();
-  }
-
-  setAlive(row: number, col: number) {
-    this.cells[row][col].isAlive = true;
-    this.cells[row][col].hasBeenOnceAlive = true;
   }
 
   ngOnInit() {
@@ -67,7 +46,28 @@ export class GridComponent implements OnInit, AfterViewInit {
     this.mouseTrack(this.grid.nativeElement);
   }
 
-  mouseTrack(grid: HTMLDivElement) {
+  public onClickHandler(row: number, col: number) {
+    if (!this.allowClick) {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Info',
+        detail: 'Please click draw button to start changing cells',
+      });
+      return;
+    }
+    if (this.cells[row][col].isAlive) {
+      this.cells[row][col].hasBeenOnceAlive = false;
+    }
+    this.cells[row][col].isAlive = !this.cells[row][col].isAlive;
+    this.tapAudio.play();
+  }
+
+  public setAlive(row: number, col: number) {
+    this.cells[row][col].isAlive = true;
+    this.cells[row][col].hasBeenOnceAlive = true;
+  }
+
+  private mouseTrack(grid: HTMLDivElement) {
     let isDown = false;
 
     grid.addEventListener('mousedown', (e) => {

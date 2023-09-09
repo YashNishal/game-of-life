@@ -8,7 +8,7 @@ import { GameState } from '../models/GameState';
 
 export class LocalstorageService {
 
-  constructor() { }
+  constructor() {}
 
   public saveData(key: LOCAL_STORAGE_KEY, gameState:GameState ) {
     const data = localStorage.getItem(key);

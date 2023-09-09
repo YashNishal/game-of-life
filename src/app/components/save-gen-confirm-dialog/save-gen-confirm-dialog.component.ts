@@ -8,11 +8,11 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
   styleUrls: ['./save-gen-confirm-dialog.component.css']
 })
 export class SaveGenConfirmDialogComponent {
-  name: string;
+  public name: string;
 
   constructor(public messageService : MessageService,public ref: DynamicDialogRef) {}
 
-  clickHandler() {
+  public clickHandler() {
     if(this.name === undefined || this.name === ''){
       this.messageService.add({severity:'error', summary: 'Error', detail: 'Please enter a name'});
       return;

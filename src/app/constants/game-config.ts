@@ -1,4 +1,4 @@
-export const BLOCK_SIZE = 25;
+export const DEFAULT_BLOCK_SIZE = 25;
 
 export enum LOCAL_STORAGE_KEY {
   SAVES = 'saves',

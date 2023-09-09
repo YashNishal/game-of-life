@@ -10,11 +10,11 @@ import { GameService } from 'src/app/services/game.service';
   styleUrls: ['./load-generation-dialog.component.css'],
 })
 export class LoadGenerationDialogComponent implements OnInit, OnDestroy {
-  saveList: GameState[] = [];
-  subscription: Subscription;
-  loading = false;
+  public saveList: GameState[] = [];
+  public loading = false;
+  public selectedSave: GameState;
 
-  selectedSave: GameState;
+  private subscription: Subscription;
 
   constructor(public gameService: GameService,public ref: DynamicDialogRef) {}
 
@@ -26,15 +26,15 @@ export class LoadGenerationDialogComponent implements OnInit, OnDestroy {
     });
   }
 
-  clickHandler(save: GameState) {
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  public clickHandler(save: GameState) {
     this.ref.close(save);
   }
 
-  removeHandler(save: GameState) {
+  public removeHandler(save: GameState) {
     this.gameService.removeSave(save);
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 }

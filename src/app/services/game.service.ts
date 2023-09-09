@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import {
-  BLOCK_SIZE,
+  DEFAULT_BLOCK_SIZE,
   LOCAL_STORAGE_KEY,
   NEIGHBOURS,
 } from '../constants/game-config';
-import { cellState } from '../models/CellState';
+import { CellState } from '../models/CellState';
 import { BehaviorSubject, Observable, from } from 'rxjs';
 import { GameState } from '../models/GameState';
 import { LocalstorageService } from './localstorage.service';
@@ -16,12 +16,12 @@ export class GameService {
   public currentInterval: any;
   public rows$ = new BehaviorSubject<number>(0);
   public cols$ = new BehaviorSubject<number>(0);
-  public blockSize$ = new BehaviorSubject<number>(BLOCK_SIZE);
+  public blockSize$ = new BehaviorSubject<number>(DEFAULT_BLOCK_SIZE);
   public savedGenerations$ = new BehaviorSubject<GameState[]>([]);
   public draw$ = new BehaviorSubject(false);
   
   private saves = new BehaviorSubject<GameState[]>([]);
-  private cells: BehaviorSubject<cellState[][]>;
+  private cells: BehaviorSubject<CellState[][]>;
   private border = new BehaviorSubject(true);
   private frameCounter = new BehaviorSubject(0);
   private alive = new BehaviorSubject(0);
@@ -30,7 +30,7 @@ export class GameService {
     return this.saves.asObservable();
   }
 
-  get cells$(): Observable<cellState[][]> {
+  get cells$(): Observable<CellState[][]> {
     return this.cells.asObservable();
   }
 
@@ -128,11 +128,11 @@ export class GameService {
     this.loadSaves();
   }
 
-  private nextGeneration(): cellState[][] {
+  private nextGeneration(): CellState[][] {
     const rows = this.rows$.value;
     const cols = this.cols$.value;
 
-    const nextGeneration: cellState[][] = structuredClone(this.cells.value);
+    const nextGeneration: CellState[][] = structuredClone(this.cells.value);
     let aliveCnt = 0;
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
@@ -180,13 +180,13 @@ export class GameService {
 
     let aliveCnt = 0;
 
-    let cells: cellState[][] = new Array(rows);
+    let cells: CellState[][] = new Array(rows);
 
     for (let i = 0; i < rows; i++) {
       cells[i] = new Array(cols);
       for (let j = 0; j < cols; j++) {
         const aliveState = randomize ? Math.random() >= 0.75 : false;
-        cells[i][j] = new cellState(i, j, aliveState, aliveState);
+        cells[i][j] = new CellState(i, j, aliveState, aliveState);
         aliveCnt += Number(cells[i][j].isAlive);
       }
     }

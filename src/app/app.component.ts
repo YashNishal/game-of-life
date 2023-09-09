@@ -9,6 +9,9 @@ import {
 } from '@angular/core';
 import { GameService } from './services/game.service';
 import { Subscription, debounce, debounceTime, fromEvent, of } from 'rxjs';
+import { DialogService } from 'primeng/dynamicdialog';
+import { InfoDialogComponent } from './components/info-dialog/info-dialog.component';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-root',
@@ -24,14 +27,25 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   resizeSubscription$: Subscription;
   constructor(
     private gameService: GameService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private dialogService: DialogService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {
+    this.dialogService.open(InfoDialogComponent, {
+      header: 'What is game of life?',
+      width: '60%',
+      baseZIndex: 10000,
+    });
     this.resizeSubscription$ = fromEvent(window, 'resize')
       .pipe(debounceTime(250))
       .subscribe((evt) => {
         this.resize();
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Resized the grid based on window size',
+        });
       });
   }
   ngAfterViewInit(): void {
