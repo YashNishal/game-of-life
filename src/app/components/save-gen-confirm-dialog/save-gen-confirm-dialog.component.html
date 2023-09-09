@@ -1,0 +1,16 @@
+<div class="wrapper" style="display: flex; justify-content: space-between;margin-top: 1rem;">
+  <input
+    type="text"
+    pInputText
+    [(ngModel)]="name"
+    required
+    minlength="1"
+    maxlength="80"
+    placeholder="name"
+  />
+  <p-button
+    icon="pi pi-check"
+    styleClass="p-button-rounded p-button-text"
+    (onClick)="clickHandler()"
+  ></p-button>
+</div>

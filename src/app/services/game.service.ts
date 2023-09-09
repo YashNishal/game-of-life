@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
-import { BLOCK_SIZE, NEIGHBOURS } from '../constants/game-config';
+import {
+  BLOCK_SIZE,
+  LOCAL_STORAGE_KEY,
+  NEIGHBOURS,
+} from '../constants/game-config';
 import { cellState } from '../models/CellState';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, from } from 'rxjs';
 import { GameState } from '../models/GameState';
+import { LocalstorageService } from './localstorage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,11 +19,16 @@ export class GameService {
   public blockSize$ = new BehaviorSubject<number>(BLOCK_SIZE);
   public savedGenerations$ = new BehaviorSubject<GameState[]>([]);
   public draw$ = new BehaviorSubject(false);
-
+  
+  private saves = new BehaviorSubject<GameState[]>([]);
   private cells: BehaviorSubject<cellState[][]>;
   private border = new BehaviorSubject(true);
   private frameCounter = new BehaviorSubject(0);
   private alive = new BehaviorSubject(0);
+
+  get saves$(): Observable<GameState[]> {
+    return this.saves.asObservable();
+  }
 
   get cells$(): Observable<cellState[][]> {
     return this.cells.asObservable();
@@ -40,9 +50,9 @@ export class GameService {
     this.border.next(!this.border.value);
   }
 
-  constructor() {
+  constructor(private localStorageService: LocalstorageService) {
     this.init(true);
-
+    this.loadSaves();
     this.rows$.subscribe(() => {
       this.reset();
     });
@@ -50,6 +60,15 @@ export class GameService {
     this.cols$.subscribe(() => {
       this.reset();
     });
+  }
+
+  public loadSaves() {
+    this.saves.next(this.localStorageService.getData(LOCAL_STORAGE_KEY.SAVES));
+  }
+
+  public removeSave(save: GameState) {
+    this.localStorageService.removeData(LOCAL_STORAGE_KEY.SAVES, save.id);
+    this.loadSaves();
   }
 
   public toggleCell(x: number, y: number) {
@@ -87,10 +106,27 @@ export class GameService {
 
   public randomize() {
     this.init(false, true);
-    console.log('IN randomize');
   }
 
-  public saveGenerationFrame() {}
+  public loadGeneration(gen: GameState) {
+    this.rows$.next(gen.rows);
+    this.cols$.next(gen.cols);
+    this.cells.next(gen.cells);
+    this.frameCounter.next(0);
+    this.alive.next(gen.alive);
+  }
+
+  public saveGenerationFrame(name: string) {
+    const newGeneration = new GameState(
+      this.cols$.value,
+      this.rows$.value,
+      this.cells.value,
+      this.alive.value,
+      name
+    );
+    this.localStorageService.saveData(LOCAL_STORAGE_KEY.SAVES, newGeneration);
+    this.loadSaves();
+  }
 
   private nextGeneration(): cellState[][] {
     const rows = this.rows$.value;

@@ -7,6 +7,6 @@ export class GameState {
     public cells: cellState[][],
     public alive: number,
     public name: string,
-    public id: string
+    public id = new Date().toLocaleString(),
   ) {}
 }

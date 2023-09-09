@@ -1,0 +1,30 @@
+<div
+  class="card"
+  style="display: flex; flex-direction: column; gap: 0.5rem"
+  [style.display]="loading ? 'flex' : 'none'"
+>
+  <p-skeleton height="2rem"></p-skeleton>
+  <p-skeleton height="2rem"></p-skeleton>
+  <p-skeleton height="2rem"></p-skeleton>
+  <p-skeleton height="2rem"></p-skeleton>
+  <p-skeleton height="2rem"></p-skeleton>
+  <p-skeleton height="2rem"></p-skeleton>
+  <p-skeleton height="2rem"></p-skeleton>
+  <p-skeleton height="2rem"></p-skeleton>
+</div>
+
+<p-listbox
+  [listStyle]="{ 'max-height': '16rem' }"
+  [style.display]="loading ? 'none' : ''"
+  [options]="saveList"
+  [(ngModel)]="selectedSave"
+  optionLabel="name"
+  [filter]="true"
+>
+<ng-template let-save pTemplate="save"> 
+  <div style="display: flex; justify-content: space-between; width: 100%;" (click)="clickHandler(save)">
+    <div>{{ save.name }}</div>
+    <i class="pi pi-times" (click)="removeHandler(save)" style="color: red;" pTooltip="remove this saved generation"></i>
+</div>
+</ng-template>
+</p-listbox>

@@ -1,7 +1,9 @@
 <p-toast></p-toast>
+
 <p-toolbar class="toolbar-wrapper">
   <!-- delay -->
   <div class="p-toolbar-group-start" style="gap: 1rem">
+    <i class="pi pi-info-circle" (click)="showInfoDialog()" pTooltip="what is game of life?" tooltipPosition="bottom"></i>
     <div class="wrap">
       <div class="p-inputgroup" style="width: 10rem">
         <span class="p-inputgroup-addon">delay</span>
@@ -37,7 +39,7 @@
 
     <span class="p-buttonset">
       <p-toggleButton
-      #startBtn
+        #startBtn
         [disabled]="gameConfigMap.draw"
         [(ngModel)]="gameConfigMap.start"
         onLabel="Pause"
@@ -60,7 +62,16 @@
       (onChange)="drawHandler()"
     ></p-toggleButton>
 
-    <p-splitButton label="Settings" [model]="customMenuItems" styleClass="p-button-raised p-button-secondary p-button-sm"></p-splitButton>
+    <div class="settings">
+      <p-menu #menu [model]="customMenuItems" [popup]="true"></p-menu>
+      <p-button
+        type="button"
+        styleClass="p-button-sm"
+        (click)="menu.toggle($event)"
+        icon="pi pi-bars"
+        label="settings"
+      ></p-button>
+    </div>
   </div>
 
   <div class="p-toolbar-group-end">

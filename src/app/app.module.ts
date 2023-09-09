@@ -17,8 +17,22 @@ import { TooltipModule } from 'primeng/tooltip';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { GridComponent } from './components/grid/grid.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { SaveGenConfirmDialogComponent } from './components/save-gen-confirm-dialog/save-gen-confirm-dialog.component';
+import { LoadGenerationDialogComponent } from './components/load-generation-dialog/load-generation-dialog.component';
+import { ListboxModule } from 'primeng/listbox';
+import { MenuModule } from 'primeng/menu';
+import { SkeletonModule } from 'primeng/skeleton';
+import { InfoDialogComponent } from './components/info-dialog/info-dialog.component';
 @NgModule({
-  declarations: [AppComponent, GridComponent, ToolbarComponent],
+  declarations: [
+    AppComponent,
+    GridComponent,
+    ToolbarComponent,
+    SaveGenConfirmDialogComponent,
+    LoadGenerationDialogComponent,
+    InfoDialogComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -34,8 +48,12 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
     ToastModule,
     TooltipModule,
     SplitButtonModule,
+    DynamicDialogModule,
+    ListboxModule,
+    MenuModule,
+    SkeletonModule,
   ],
-  providers: [MessageService],
+  providers: [MessageService, DialogService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -2,6 +2,10 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { debounceTime, of } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { GameService } from 'src/app/services/game.service';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { SaveGenConfirmDialogComponent } from '../save-gen-confirm-dialog/save-gen-confirm-dialog.component';
+import { LoadGenerationDialogComponent } from '../load-generation-dialog/load-generation-dialog.component';
+import { InfoDialogComponent } from '../info-dialog/info-dialog.component';
 
 @Component({
   selector: 'app-toolbar',
@@ -12,6 +16,7 @@ export class ToolbarComponent implements OnInit {
   @ViewChild('startBtn') startBtn: any;
   private rows$ = this.gameService.rows$;
   private cols$ = this.gameService.cols$;
+  private ref: DynamicDialogRef | undefined;
 
   public rows = 0;
   public cols = 0;
@@ -32,8 +37,46 @@ export class ToolbarComponent implements OnInit {
 
   constructor(
     private gameService: GameService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private dialogService: DialogService
   ) {}
+
+  showInfoDialog() {
+    this.ref = this.dialogService.open(InfoDialogComponent, {
+      header: 'What is game of life?',
+      width: '60%',
+      baseZIndex: 10000,
+    });
+  }
+
+  showSaveGenDialog() {
+    this.ref = this.dialogService.open(SaveGenConfirmDialogComponent, {
+      header: 'Name your generation',
+      baseZIndex: 10000,
+      width: '25%',
+    });
+    this.ref.onClose.subscribe((name) => {
+      if (name) {
+        this.gameService.saveGenerationFrame(name);
+        this.showMessage('success', 'Generation saved');
+      }
+    });
+  }
+
+  showLoadGenDialog() {
+    this.ref = this.dialogService.open(LoadGenerationDialogComponent, {
+      header: 'Load a generation',
+      width: '35%',
+      baseZIndex: 10000,
+    });
+
+    this.ref.onClose.subscribe((gen) => {
+      if (gen) {
+        this.gameService.loadGeneration(gen);
+        this.showMessage('success', 'Generation loaded');
+      }
+    });
+  }
 
   drawHandler() {
     if (this.gameConfigMap.start) {
@@ -74,22 +117,28 @@ export class ToolbarComponent implements OnInit {
     this.customMenuItems = [
       {
         label: 'Load',
-        items: [],
+        icon: 'pi pi-fw pi-external-link',
+        command: () => {
+          this.showLoadGenDialog();
+        },
       },
       {
         label: 'Save',
+        icon: 'pi pi-fw pi-plus-circle',
         command: () => {
           this.saveGenerationHandler();
         },
       },
       {
         label: 'Randomize',
+        icon: 'pi pi-fw pi-refresh',
         command: () => {
           this.randomizeHandler();
         },
       },
       {
         label: 'Toggle Border',
+        icon: 'pi pi-fw pi-table',
         command: () => {
           this.borderHandler();
         },
@@ -122,7 +171,7 @@ export class ToolbarComponent implements OnInit {
       );
       return;
     }
-    this.gameService.saveGenerationFrame();
+    this.showSaveGenDialog();
   }
 
   public resetHandler() {
