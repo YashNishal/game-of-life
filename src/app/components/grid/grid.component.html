@@ -1,0 +1,24 @@
+<div
+#grid
+  class="grid-wrapper"
+  style="display: grid; width: 100%; height: 100%"
+  [style.outline]="(border$ | async) ? '1px solid black' : 'none'"
+  [style.grid-template]="
+    'repeat(' + rows + ',1fr)/' + 'repeat(' + cols + ',1fr)'
+  "
+>
+  <ng-container *ngFor="let row of cells; let i = index">
+    <ng-container *ngFor="let cell of row; let j = index">
+      <div
+        (click)="onClickHandler(i,j)"
+        id="{{ i }} {{ j }}"
+        [style.outline]="(border$ | async) ? '1px solid black' : 'none'"
+        [ngClass]="{
+        dead: !cells[i][j].isAlive && !cells[i][j].hasBeenOnceAlive,
+        'once-alive': !cells[i][j].isAlive && cells[i][j].hasBeenOnceAlive,
+        alive: cells[i][j].isAlive,
+      }"
+      ></div>
+    </ng-container>
+  </ng-container>
+</div>

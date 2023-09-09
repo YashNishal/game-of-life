@@ -1,0 +1,13 @@
+@import '../../../styles/variables.scss';
+
+.alive {
+  background-color: $alive-color;
+}
+
+.dead {
+  background-color: $dead-color;
+}
+
+.once-alive {
+  background-color: $once-alive-color;
+}

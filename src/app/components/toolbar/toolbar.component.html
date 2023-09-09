@@ -1,0 +1,73 @@
+<p-toast></p-toast>
+<p-toolbar class="toolbar-wrapper">
+  <!-- delay -->
+  <div class="p-toolbar-group-start" style="gap: 1rem">
+    <div class="wrap">
+      <div class="p-inputgroup" style="width: 10rem">
+        <span class="p-inputgroup-addon">delay</span>
+        <p-inputNumber
+          styleClass="p-inputtext-sm"
+          [(ngModel)]="gameConfigMap.delay"
+          inputId="Delay"
+          [min]="50"
+          [max]="5000"
+          pTooltip="The delay can be between 50ms to 5000ms"
+          tooltipPosition="bottom"
+          suffix=" ms"
+          placeholder="250 ms"
+        />
+      </div>
+    </div>
+    <!-- blockSize -->
+    <div class="wrap">
+      <div class="p-inputgroup" style="width: 11rem">
+        <span class="p-inputgroup-addon">block size</span>
+        <p-inputNumber
+          styleClass="p-inputtext-sm"
+          [(ngModel)]="gameConfigMap.blockSize"
+          inputId="blockSize"
+          (onInput)="blockSizeHandler()"
+          pTooltip="The block size can be between 15px to 500px"
+          tooltipPosition="bottom"
+          suffix=" px"
+          placeholder="25 px"
+        />
+      </div>
+    </div>
+
+    <span class="p-buttonset">
+      <p-toggleButton
+      #startBtn
+        [disabled]="gameConfigMap.draw"
+        [(ngModel)]="gameConfigMap.start"
+        onLabel="Pause"
+        offLabel="Start"
+        (onChange)="startHandler()"
+        styleClass="p-button-sm"
+      ></p-toggleButton>
+      <p-button
+        label="Reset"
+        (onClick)="resetHandler()"
+        styleClass="p-button-sm"
+      ></p-button>
+    </span>
+
+    <p-toggleButton
+      [(ngModel)]="gameConfigMap.draw"
+      onLabel="Confirm"
+      offLabel="Draw"
+      styleClass="p-button-sm"
+      (onChange)="drawHandler()"
+    ></p-toggleButton>
+
+    <p-splitButton label="Settings" [model]="customMenuItems" styleClass="p-button-raised p-button-secondary p-button-sm"></p-splitButton>
+  </div>
+
+  <div class="p-toolbar-group-end">
+    <div class="wrap" style="font-size: 1rem">
+      <div>Generation Count : {{ frameCounter$ | async }}</div>
+      <div>Alive: {{ alive$ | async }}/{{ rows * cols }}</div>
+      <div>row: {{ rows }} | cols: {{ cols }}</div>
+    </div>
+  </div>
+</p-toolbar>
