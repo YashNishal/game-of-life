@@ -42,6 +42,9 @@ export class GridComponent implements OnInit, AfterViewInit {
       });
       return;
     }
+    if (this.cells[row][col].isAlive) {
+      this.cells[row][col].hasBeenOnceAlive = false;
+    }
     this.cells[row][col].isAlive = !this.cells[row][col].isAlive;
     this.tapAudio.play();
   }
@@ -68,7 +71,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     let isDown = false;
 
     grid.addEventListener('mousedown', (e) => {
-      if(this.allowClick) {
+      if (this.allowClick) {
         isDown = true;
         this.tapAudio.play();
       }
@@ -76,7 +79,7 @@ export class GridComponent implements OnInit, AfterViewInit {
 
     grid.addEventListener('mousemove', (e) => {
       if (isDown === true && this.allowClick && e.target) {
-        const [row,cell] = (e.target as any).id.split(' ');
+        const [row, cell] = (e.target as any).id.split(' ');
         this.setAlive(+row, +cell);
       }
     });
