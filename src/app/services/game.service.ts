@@ -72,7 +72,7 @@ export class GameService {
   }
 
   public toggleCell(x: number, y: number) {
-    const newCells = structuredClone(this.cells.value);
+    const newCells = this.cells.value;
     newCells[x][y].isAlive = !newCells[x][y].isAlive;
     newCells[x][y].hasBeenOnceAlive =
       newCells[x][y].hasBeenOnceAlive ?? newCells[x][y].isAlive;
@@ -80,7 +80,7 @@ export class GameService {
   }
 
   public setCellState(x: number, y: number, alive: boolean) {
-    const newCells = structuredClone(this.cells.value);
+    const newCells = this.cells.value;
     newCells[x][y].isAlive = alive;
     newCells[x][y].hasBeenOnceAlive = newCells[x][y].hasBeenOnceAlive ?? alive;
 
@@ -132,7 +132,7 @@ export class GameService {
     const rows = this.rows$.value;
     const cols = this.cols$.value;
 
-    const nextGeneration: CellState[][] = structuredClone(this.cells.value);
+    const nextGeneration: CellState[][] = this.cells.value;
     let aliveCnt = 0;
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
