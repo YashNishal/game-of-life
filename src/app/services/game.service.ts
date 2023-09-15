@@ -132,7 +132,7 @@ export class GameService {
     const rows = this.rows$.value;
     const cols = this.cols$.value;
 
-    const nextGeneration: CellState[][] = this.cells.value;
+    const nextGeneration: CellState[][] = structuredClone(this.cells.value);
     let aliveCnt = 0;
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
